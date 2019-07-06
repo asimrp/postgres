@@ -20,17 +20,17 @@ msgstr ""
 #: ../../../src/common/logging.c:188
 #, c-format
 msgid "fatal: "
-msgstr ""
+msgstr "घातक: "
 
 #: ../../../src/common/logging.c:195
 #, c-format
 msgid "error: "
-msgstr ""
+msgstr "गलत: "
 
 #: ../../../src/common/logging.c:202
 #, c-format
 msgid "warning: "
-msgstr ""
+msgstr "चेतावनी"
 
 #: ../../common/exec.c:138 ../../common/exec.c:255 ../../common/exec.c:301
 #, c-format

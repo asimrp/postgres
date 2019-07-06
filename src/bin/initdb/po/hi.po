@@ -1,0 +1,923 @@
+# LANGUAGE message translation file for initdb
+# Copyright (C) 2019 PostgreSQL Global Development Group
+# This file is distributed under the same license as the initdb (PostgreSQL) package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: initdb (PostgreSQL) 13\n"
+"Report-Msgid-Bugs-To: pgsql-bugs@lists.postgresql.org\n"
+"POT-Creation-Date: 2019-07-06 16:09+0530\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../../src/common/logging.c:188
+#, c-format
+msgid "fatal: "
+msgstr ""
+
+#: ../../../src/common/logging.c:195
+#, c-format
+msgid "error: "
+msgstr ""
+
+#: ../../../src/common/logging.c:202
+#, c-format
+msgid "warning: "
+msgstr ""
+
+#: ../../common/exec.c:138 ../../common/exec.c:255 ../../common/exec.c:301
+#, c-format
+msgid "could not identify current directory: %m"
+msgstr ""
+
+#: ../../common/exec.c:157
+#, c-format
+msgid "invalid binary \"%s\""
+msgstr ""
+
+#: ../../common/exec.c:207
+#, c-format
+msgid "could not read binary \"%s\""
+msgstr ""
+
+#: ../../common/exec.c:215
+#, c-format
+msgid "could not find a \"%s\" to execute"
+msgstr ""
+
+#: ../../common/exec.c:271 ../../common/exec.c:310
+#, c-format
+msgid "could not change directory to \"%s\": %m"
+msgstr ""
+
+#: ../../common/exec.c:288
+#, c-format
+msgid "could not read symbolic link \"%s\": %m"
+msgstr ""
+
+#: ../../common/exec.c:541
+#, c-format
+msgid "pclose failed: %m"
+msgstr ""
+
+#: ../../common/exec.c:670 ../../common/exec.c:715 ../../common/exec.c:807
+#: initdb.c:339
+#, c-format
+msgid "out of memory"
+msgstr ""
+
+#: ../../common/fe_memutils.c:35 ../../common/fe_memutils.c:75
+#: ../../common/fe_memutils.c:98
+#, c-format
+msgid "out of memory\n"
+msgstr ""
+
+#: ../../common/fe_memutils.c:92
+#, c-format
+msgid "cannot duplicate null pointer (internal error)\n"
+msgstr ""
+
+#: ../../common/file_utils.c:81 ../../common/file_utils.c:183
+#, c-format
+msgid "could not stat file \"%s\": %m"
+msgstr ""
+
+#: ../../common/file_utils.c:160 ../../common/pgfnames.c:48
+#, c-format
+msgid "could not open directory \"%s\": %m"
+msgstr ""
+
+#: ../../common/file_utils.c:194 ../../common/pgfnames.c:69
+#, c-format
+msgid "could not read directory \"%s\": %m"
+msgstr ""
+
+#: ../../common/file_utils.c:226 ../../common/file_utils.c:285
+#: ../../common/file_utils.c:359
+#, c-format
+msgid "could not open file \"%s\": %m"
+msgstr ""
+
+#: ../../common/file_utils.c:297 ../../common/file_utils.c:367
+#, c-format
+msgid "could not fsync file \"%s\": %m"
+msgstr ""
+
+#: ../../common/file_utils.c:377
+#, c-format
+msgid "could not rename file \"%s\" to \"%s\": %m"
+msgstr ""
+
+#: ../../common/pgfnames.c:74
+#, c-format
+msgid "could not close directory \"%s\": %m"
+msgstr ""
+
+#: ../../common/restricted_token.c:69
+#, c-format
+msgid "cannot create restricted tokens on this platform"
+msgstr ""
+
+#: ../../common/restricted_token.c:78
+#, c-format
+msgid "could not open process token: error code %lu"
+msgstr ""
+
+#: ../../common/restricted_token.c:91
+#, c-format
+msgid "could not allocate SIDs: error code %lu"
+msgstr ""
+
+#: ../../common/restricted_token.c:110
+#, c-format
+msgid "could not create restricted token: error code %lu"
+msgstr ""
+
+#: ../../common/restricted_token.c:131
+#, c-format
+msgid "could not start process for command \"%s\": error code %lu"
+msgstr ""
+
+#: ../../common/restricted_token.c:169
+#, c-format
+msgid "could not re-execute with restricted token: error code %lu"
+msgstr ""
+
+#: ../../common/restricted_token.c:185
+#, c-format
+msgid "could not get exit code from subprocess: error code %lu"
+msgstr ""
+
+#: ../../common/rmtree.c:79
+#, c-format
+msgid "could not stat file or directory \"%s\": %m"
+msgstr ""
+
+#: ../../common/rmtree.c:101 ../../common/rmtree.c:113
+#, c-format
+msgid "could not remove file or directory \"%s\": %m"
+msgstr ""
+
+#: ../../common/username.c:43
+#, c-format
+msgid "could not look up effective user ID %ld: %s"
+msgstr ""
+
+#: ../../common/username.c:45
+msgid "user does not exist"
+msgstr ""
+
+#: ../../common/username.c:60
+#, c-format
+msgid "user name lookup failure: error code %lu"
+msgstr ""
+
+#: ../../common/wait_error.c:45
+#, c-format
+msgid "command not executable"
+msgstr ""
+
+#: ../../common/wait_error.c:49
+#, c-format
+msgid "command not found"
+msgstr ""
+
+#: ../../common/wait_error.c:54
+#, c-format
+msgid "child process exited with exit code %d"
+msgstr ""
+
+#: ../../common/wait_error.c:62
+#, c-format
+msgid "child process was terminated by exception 0x%X"
+msgstr ""
+
+#: ../../common/wait_error.c:66
+#, c-format
+msgid "child process was terminated by signal %d: %s"
+msgstr ""
+
+#: ../../common/wait_error.c:72
+#, c-format
+msgid "child process exited with unrecognized status %d"
+msgstr ""
+
+#: ../../port/dirmod.c:221
+#, c-format
+msgid "could not set junction for \"%s\": %s\n"
+msgstr ""
+
+#: ../../port/dirmod.c:298
+#, c-format
+msgid "could not get junction for \"%s\": %s\n"
+msgstr ""
+
+#: initdb.c:495 initdb.c:1536
+#, c-format
+msgid "could not open file \"%s\" for reading: %m"
+msgstr ""
+
+#: initdb.c:550 initdb.c:860 initdb.c:886
+#, c-format
+msgid "could not open file \"%s\" for writing: %m"
+msgstr ""
+
+#: initdb.c:557 initdb.c:564 initdb.c:866 initdb.c:891
+#, c-format
+msgid "could not write file \"%s\": %m"
+msgstr ""
+
+#: initdb.c:582
+#, c-format
+msgid "could not execute command \"%s\": %m"
+msgstr ""
+
+#: initdb.c:600
+#, c-format
+msgid "removing data directory \"%s\""
+msgstr ""
+
+#: initdb.c:602
+#, c-format
+msgid "failed to remove data directory"
+msgstr ""
+
+#: initdb.c:606
+#, c-format
+msgid "removing contents of data directory \"%s\""
+msgstr ""
+
+#: initdb.c:609
+#, c-format
+msgid "failed to remove contents of data directory"
+msgstr ""
+
+#: initdb.c:614
+#, c-format
+msgid "removing WAL directory \"%s\""
+msgstr ""
+
+#: initdb.c:616
+#, c-format
+msgid "failed to remove WAL directory"
+msgstr ""
+
+#: initdb.c:620
+#, c-format
+msgid "removing contents of WAL directory \"%s\""
+msgstr ""
+
+#: initdb.c:622
+#, c-format
+msgid "failed to remove contents of WAL directory"
+msgstr ""
+
+#: initdb.c:629
+#, c-format
+msgid "data directory \"%s\" not removed at user's request"
+msgstr ""
+
+#: initdb.c:633
+#, c-format
+msgid "WAL directory \"%s\" not removed at user's request"
+msgstr ""
+
+#: initdb.c:651
+#, c-format
+msgid "cannot be run as root"
+msgstr ""
+
+#: initdb.c:653
+#, c-format
+msgid ""
+"Please log in (using, e.g., \"su\") as the (unprivileged) user that will\n"
+"own the server process.\n"
+msgstr ""
+
+#: initdb.c:686
+#, c-format
+msgid "\"%s\" is not a valid server encoding name"
+msgstr ""
+
+#: initdb.c:819
+#, c-format
+msgid "file \"%s\" does not exist"
+msgstr ""
+
+#: initdb.c:821 initdb.c:828 initdb.c:837
+#, c-format
+msgid ""
+"This might mean you have a corrupted installation or identified\n"
+"the wrong directory with the invocation option -L.\n"
+msgstr ""
+
+#: initdb.c:826
+#, c-format
+msgid "could not access file \"%s\": %m"
+msgstr ""
+
+#: initdb.c:835
+#, c-format
+msgid "file \"%s\" is not a regular file"
+msgstr ""
+
+#: initdb.c:980
+#, c-format
+msgid "selecting dynamic shared memory implementation ... "
+msgstr ""
+
+#: initdb.c:989
+#, c-format
+msgid "selecting default max_connections ... "
+msgstr ""
+
+#: initdb.c:1020
+#, c-format
+msgid "selecting default shared_buffers ... "
+msgstr ""
+
+#: initdb.c:1054
+#, c-format
+msgid "selecting default timezone ... "
+msgstr ""
+
+#: initdb.c:1088
+msgid "creating configuration files ... "
+msgstr ""
+
+#: initdb.c:1241 initdb.c:1260 initdb.c:1346 initdb.c:1361
+#, c-format
+msgid "could not change permissions of \"%s\": %m"
+msgstr ""
+
+#: initdb.c:1383
+#, c-format
+msgid "running bootstrap script ... "
+msgstr ""
+
+#: initdb.c:1395
+#, c-format
+msgid "input file \"%s\" does not belong to PostgreSQL %s"
+msgstr ""
+
+#: initdb.c:1398
+#, c-format
+msgid "Check your installation or specify the correct path using the option -L.\n"
+msgstr ""
+
+#: initdb.c:1513
+msgid "Enter new superuser password: "
+msgstr ""
+
+#: initdb.c:1514
+msgid "Enter it again: "
+msgstr ""
+
+#: initdb.c:1517
+#, c-format
+msgid "Passwords didn't match.\n"
+msgstr ""
+
+#: initdb.c:1543
+#, c-format
+msgid "could not read password from file \"%s\": %m"
+msgstr ""
+
+#: initdb.c:1546
+#, c-format
+msgid "password file \"%s\" is empty"
+msgstr ""
+
+#: initdb.c:2109
+#, c-format
+msgid "caught signal\n"
+msgstr ""
+
+#: initdb.c:2115
+#, c-format
+msgid "could not write to child process: %s\n"
+msgstr ""
+
+#: initdb.c:2123
+#, c-format
+msgid "ok\n"
+msgstr ""
+
+#: initdb.c:2213
+#, c-format
+msgid "setlocale() failed"
+msgstr ""
+
+#: initdb.c:2234
+#, c-format
+msgid "failed to restore old locale \"%s\""
+msgstr ""
+
+#: initdb.c:2243
+#, c-format
+msgid "invalid locale name \"%s\""
+msgstr ""
+
+#: initdb.c:2254
+#, c-format
+msgid "invalid locale settings; check LANG and LC_* environment variables"
+msgstr ""
+
+#: initdb.c:2281
+#, c-format
+msgid "encoding mismatch"
+msgstr ""
+
+#: initdb.c:2283
+#, c-format
+msgid ""
+"The encoding you selected (%s) and the encoding that the\n"
+"selected locale uses (%s) do not match.  This would lead to\n"
+"misbehavior in various character string processing functions.\n"
+"Rerun %s and either do not specify an encoding explicitly,\n"
+"or choose a matching combination.\n"
+msgstr ""
+
+#: initdb.c:2355
+#, c-format
+msgid ""
+"%s initializes a PostgreSQL database cluster.\n"
+"\n"
+msgstr ""
+
+#: initdb.c:2356
+#, c-format
+msgid "Usage:\n"
+msgstr ""
+
+#: initdb.c:2357
+#, c-format
+msgid "  %s [OPTION]... [DATADIR]\n"
+msgstr ""
+
+#: initdb.c:2358
+#, c-format
+msgid ""
+"\n"
+"Options:\n"
+msgstr ""
+
+#: initdb.c:2359
+#, c-format
+msgid "  -A, --auth=METHOD         default authentication method for local connections\n"
+msgstr ""
+
+#: initdb.c:2360
+#, c-format
+msgid "      --auth-host=METHOD    default authentication method for local TCP/IP connections\n"
+msgstr ""
+
+#: initdb.c:2361
+#, c-format
+msgid "      --auth-local=METHOD   default authentication method for local-socket connections\n"
+msgstr ""
+
+#: initdb.c:2362
+#, c-format
+msgid " [-D, --pgdata=]DATADIR     location for this database cluster\n"
+msgstr ""
+
+#: initdb.c:2363
+#, c-format
+msgid "  -E, --encoding=ENCODING   set default encoding for new databases\n"
+msgstr ""
+
+#: initdb.c:2364
+#, c-format
+msgid "  -g, --allow-group-access  allow group read/execute on data directory\n"
+msgstr ""
+
+#: initdb.c:2365
+#, c-format
+msgid "      --locale=LOCALE       set default locale for new databases\n"
+msgstr ""
+
+#: initdb.c:2366
+#, c-format
+msgid ""
+"      --lc-collate=, --lc-ctype=, --lc-messages=LOCALE\n"
+"      --lc-monetary=, --lc-numeric=, --lc-time=LOCALE\n"
+"                            set default locale in the respective category for\n"
+"                            new databases (default taken from environment)\n"
+msgstr ""
+
+#: initdb.c:2370
+#, c-format
+msgid "      --no-locale           equivalent to --locale=C\n"
+msgstr ""
+
+#: initdb.c:2371
+#, c-format
+msgid "      --pwfile=FILE         read password for the new superuser from file\n"
+msgstr ""
+
+#: initdb.c:2372
+#, c-format
+msgid ""
+"  -T, --text-search-config=CFG\n"
+"                            default text search configuration\n"
+msgstr ""
+
+#: initdb.c:2374
+#, c-format
+msgid "  -U, --username=NAME       database superuser name\n"
+msgstr ""
+
+#: initdb.c:2375
+#, c-format
+msgid "  -W, --pwprompt            prompt for a password for the new superuser\n"
+msgstr ""
+
+#: initdb.c:2376
+#, c-format
+msgid "  -X, --waldir=WALDIR       location for the write-ahead log directory\n"
+msgstr ""
+
+#: initdb.c:2377
+#, c-format
+msgid "      --wal-segsize=SIZE    size of WAL segments, in megabytes\n"
+msgstr ""
+
+#: initdb.c:2378
+#, c-format
+msgid ""
+"\n"
+"Less commonly used options:\n"
+msgstr ""
+
+#: initdb.c:2379
+#, c-format
+msgid "  -d, --debug               generate lots of debugging output\n"
+msgstr ""
+
+#: initdb.c:2380
+#, c-format
+msgid "  -k, --data-checksums      use data page checksums\n"
+msgstr ""
+
+#: initdb.c:2381
+#, c-format
+msgid "  -L DIRECTORY              where to find the input files\n"
+msgstr ""
+
+#: initdb.c:2382
+#, c-format
+msgid "  -n, --no-clean            do not clean up after errors\n"
+msgstr ""
+
+#: initdb.c:2383
+#, c-format
+msgid "  -N, --no-sync             do not wait for changes to be written safely to disk\n"
+msgstr ""
+
+#: initdb.c:2384
+#, c-format
+msgid "  -s, --show                show internal settings\n"
+msgstr ""
+
+#: initdb.c:2385
+#, c-format
+msgid "  -S, --sync-only           only sync data directory\n"
+msgstr ""
+
+#: initdb.c:2386
+#, c-format
+msgid ""
+"\n"
+"Other options:\n"
+msgstr ""
+
+#: initdb.c:2387
+#, c-format
+msgid "  -V, --version             output version information, then exit\n"
+msgstr ""
+
+#: initdb.c:2388
+#, c-format
+msgid "  -?, --help                show this help, then exit\n"
+msgstr ""
+
+#: initdb.c:2389
+#, c-format
+msgid ""
+"\n"
+"If the data directory is not specified, the environment variable PGDATA\n"
+"is used.\n"
+msgstr ""
+
+#: initdb.c:2391
+#, c-format
+msgid ""
+"\n"
+"Report bugs to <pgsql-bugs@lists.postgresql.org>.\n"
+msgstr ""
+
+#: initdb.c:2419
+#, c-format
+msgid "invalid authentication method \"%s\" for \"%s\" connections"
+msgstr ""
+
+#: initdb.c:2435
+#, c-format
+msgid "must specify a password for the superuser to enable %s authentication"
+msgstr ""
+
+#: initdb.c:2462
+#, c-format
+msgid "no data directory specified"
+msgstr ""
+
+#: initdb.c:2464
+#, c-format
+msgid ""
+"You must identify the directory where the data for this database system\n"
+"will reside.  Do this with either the invocation option -D or the\n"
+"environment variable PGDATA.\n"
+msgstr ""
+
+#: initdb.c:2499
+#, c-format
+msgid ""
+"The program \"postgres\" is needed by %s but was not found in the\n"
+"same directory as \"%s\".\n"
+"Check your installation."
+msgstr ""
+
+#: initdb.c:2504
+#, c-format
+msgid ""
+"The program \"postgres\" was found by \"%s\"\n"
+"but was not the same version as %s.\n"
+"Check your installation."
+msgstr ""
+
+#: initdb.c:2523
+#, c-format
+msgid "input file location must be an absolute path"
+msgstr ""
+
+#: initdb.c:2540
+#, c-format
+msgid "The database cluster will be initialized with locale \"%s\".\n"
+msgstr ""
+
+#: initdb.c:2543
+#, c-format
+msgid ""
+"The database cluster will be initialized with locales\n"
+"  COLLATE:  %s\n"
+"  CTYPE:    %s\n"
+"  MESSAGES: %s\n"
+"  MONETARY: %s\n"
+"  NUMERIC:  %s\n"
+"  TIME:     %s\n"
+msgstr ""
+
+#: initdb.c:2567
+#, c-format
+msgid "could not find suitable encoding for locale \"%s\""
+msgstr ""
+
+#: initdb.c:2569
+#, c-format
+msgid "Rerun %s with the -E option.\n"
+msgstr ""
+
+#: initdb.c:2570 initdb.c:3198 initdb.c:3219
+#, c-format
+msgid "Try \"%s --help\" for more information.\n"
+msgstr ""
+
+#: initdb.c:2583
+#, c-format
+msgid ""
+"Encoding \"%s\" implied by locale is not allowed as a server-side encoding.\n"
+"The default database encoding will be set to \"%s\" instead.\n"
+msgstr ""
+
+#: initdb.c:2588
+#, c-format
+msgid "locale \"%s\" requires unsupported encoding \"%s\""
+msgstr ""
+
+#: initdb.c:2591
+#, c-format
+msgid ""
+"Encoding \"%s\" is not allowed as a server-side encoding.\n"
+"Rerun %s with a different locale selection.\n"
+msgstr ""
+
+#: initdb.c:2600
+#, c-format
+msgid "The default database encoding has accordingly been set to \"%s\".\n"
+msgstr ""
+
+#: initdb.c:2668
+#, c-format
+msgid "could not find suitable text search configuration for locale \"%s\""
+msgstr ""
+
+#: initdb.c:2679
+#, c-format
+msgid "suitable text search configuration for locale \"%s\" is unknown"
+msgstr ""
+
+#: initdb.c:2684
+#, c-format
+msgid "specified text search configuration \"%s\" might not match locale \"%s\""
+msgstr ""
+
+#: initdb.c:2689
+#, c-format
+msgid "The default text search configuration will be set to \"%s\".\n"
+msgstr ""
+
+#: initdb.c:2733 initdb.c:2815
+#, c-format
+msgid "creating directory %s ... "
+msgstr ""
+
+#: initdb.c:2739 initdb.c:2821 initdb.c:2886 initdb.c:2948
+#, c-format
+msgid "could not create directory \"%s\": %m"
+msgstr ""
+
+#: initdb.c:2750 initdb.c:2833
+#, c-format
+msgid "fixing permissions on existing directory %s ... "
+msgstr ""
+
+#: initdb.c:2756 initdb.c:2839
+#, c-format
+msgid "could not change permissions of directory \"%s\": %m"
+msgstr ""
+
+#: initdb.c:2770 initdb.c:2853
+#, c-format
+msgid "directory \"%s\" exists but is not empty"
+msgstr ""
+
+#: initdb.c:2775
+#, c-format
+msgid ""
+"If you want to create a new database system, either remove or empty\n"
+"the directory \"%s\" or run %s\n"
+"with an argument other than \"%s\".\n"
+msgstr ""
+
+#: initdb.c:2783 initdb.c:2865 initdb.c:3234
+#, c-format
+msgid "could not access directory \"%s\": %m"
+msgstr ""
+
+#: initdb.c:2806
+#, c-format
+msgid "WAL directory location must be an absolute path"
+msgstr ""
+
+#: initdb.c:2858
+#, c-format
+msgid ""
+"If you want to store the WAL there, either remove or empty the directory\n"
+"\"%s\".\n"
+msgstr ""
+
+#: initdb.c:2872
+#, c-format
+msgid "could not create symbolic link \"%s\": %m"
+msgstr ""
+
+#: initdb.c:2877
+#, c-format
+msgid "symlinks are not supported on this platform"
+msgstr ""
+
+#: initdb.c:2901
+#, c-format
+msgid "It contains a dot-prefixed/invisible file, perhaps due to it being a mount point.\n"
+msgstr ""
+
+#: initdb.c:2904
+#, c-format
+msgid "It contains a lost+found directory, perhaps due to it being a mount point.\n"
+msgstr ""
+
+#: initdb.c:2907
+#, c-format
+msgid ""
+"Using a mount point directly as the data directory is not recommended.\n"
+"Create a subdirectory under the mount point.\n"
+msgstr ""
+
+#: initdb.c:2933
+#, c-format
+msgid "creating subdirectories ... "
+msgstr ""
+
+#: initdb.c:2979
+msgid "performing post-bootstrap initialization ... "
+msgstr ""
+
+#: initdb.c:3136
+#, c-format
+msgid "Running in debug mode.\n"
+msgstr ""
+
+#: initdb.c:3140
+#, c-format
+msgid "Running in no-clean mode.  Mistakes will not be cleaned up.\n"
+msgstr ""
+
+#: initdb.c:3217
+#, c-format
+msgid "too many command-line arguments (first is \"%s\")"
+msgstr ""
+
+#: initdb.c:3238 initdb.c:3327
+msgid "syncing data to disk ... "
+msgstr ""
+
+#: initdb.c:3247
+#, c-format
+msgid "password prompt and password file cannot be specified together"
+msgstr ""
+
+#: initdb.c:3272
+#, c-format
+msgid "argument of --wal-segsize must be a number"
+msgstr ""
+
+#: initdb.c:3277
+#, c-format
+msgid "argument of --wal-segsize must be a power of 2 between 1 and 1024"
+msgstr ""
+
+#: initdb.c:3294
+#, c-format
+msgid "superuser name \"%s\" is disallowed; role names cannot begin with \"pg_\""
+msgstr ""
+
+#: initdb.c:3298
+#, c-format
+msgid ""
+"The files belonging to this database system will be owned by user \"%s\".\n"
+"This user must also own the server process.\n"
+"\n"
+msgstr ""
+
+#: initdb.c:3314
+#, c-format
+msgid "Data page checksums are enabled.\n"
+msgstr ""
+
+#: initdb.c:3316
+#, c-format
+msgid "Data page checksums are disabled.\n"
+msgstr ""
+
+#: initdb.c:3333
+#, c-format
+msgid ""
+"\n"
+"Sync to disk skipped.\n"
+"The data directory might become corrupt if the operating system crashes.\n"
+msgstr ""
+
+#: initdb.c:3338
+#, c-format
+msgid "enabling \"trust\" authentication for local connections"
+msgstr ""
+
+#: initdb.c:3339
+#, c-format
+msgid ""
+"You can change this by editing pg_hba.conf or using the option -A, or\n"
+"--auth-local and --auth-host, the next time you run initdb.\n"
+msgstr ""
+
+#. translator: This is a placeholder in a shell command.
+#: initdb.c:3364
+msgid "logfile"
+msgstr ""
+
+#: initdb.c:3366
+#, c-format
+msgid ""
+"\n"
+"Success. You can now start the database server using:\n"
+"\n"
+"    %s\n"
+"\n"
+msgstr ""

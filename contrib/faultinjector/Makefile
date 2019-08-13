@@ -3,7 +3,7 @@ MODULES = faultinjector
 EXTENSION = faultinjector
 DATA = faultinjector--1.0.sql
 
-REGRESS = inject_fault_test
+REGRESS = faultinjector_test
 
 PG_CPPFLAGS = -I$(libpq_srcdir)
 SHLIB_LINK_INTERNAL = $(libpq)

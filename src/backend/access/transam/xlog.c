@@ -8532,7 +8532,7 @@ CreateCheckPoint(int flags)
 		shutdown = false;
 
 #ifdef FAULT_INJECTOR
-	if (SIMPLE_FAULT_INJECTOR(Checkpoint) == FaultInjectorTypeSkip)
+	if (SIMPLE_FAULT_INJECTOR("checkpoint") == FaultInjectorTypeSkip)
 		return;
 #endif
 

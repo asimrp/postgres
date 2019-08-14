@@ -183,17 +183,14 @@ FaultInjector_ShmemInit(void)
 	faultInjectorShmem = (FaultInjectorShmem_s *) ShmemInitStruct("fault injector",
 																  sizeof(FaultInjectorShmem_s),
 																  &foundPtr);
-	
-	if (faultInjectorShmem == NULL) {
+
+	if (faultInjectorShmem == NULL)
 		ereport(ERROR,
 				(errcode(ERRCODE_OUT_OF_MEMORY),
 				 (errmsg("not enough shared memory for fault injector"))));
-	}	
 	
-	if (! foundPtr) 
-	{
+	if (!foundPtr)
 		MemSet(faultInjectorShmem, 0, sizeof(FaultInjectorShmem_s));
-	}	
 	
 	SpinLockInit(&faultInjectorShmem->lock);
 	
@@ -210,11 +207,10 @@ FaultInjector_ShmemInit(void)
 								   &hash_ctl,
 								   HASH_ELEM | HASH_FUNCTION);
 	
-	if (faultInjectorShmem->hash == NULL) {
+	if (faultInjectorShmem->hash == NULL)
 		ereport(ERROR, 
 				(errcode(ERRCODE_OUT_OF_MEMORY),
 				 (errmsg("not enough shared memory for fault injector"))));
-	}
 
 	elog(LOG, "initialized faultinjector shmem");
 	return;						  
@@ -254,7 +250,7 @@ FaultInjector_InjectFaultIfSet(
 	if (IsAutoVacuumLauncherProcess() ||
 		(IsAutoVacuumWorkerProcess() &&
 		 !(0 == strcmp("vacuum_update_dat_frozen_xid", faultName) ||
-			 0 == strcmp("auto_vac_worker_before_do_autovacuum", faultName))))
+		   0 == strcmp("auto_vac_worker_before_do_autovacuum", faultName))))
 		return FaultInjectorTypeNotSpecified;
 
 	/*
@@ -324,9 +320,9 @@ FaultInjector_InjectFaultIfSet(
 	FiLockRelease();
 
 	/* Inject fault */
-	switch (entryLocal->faultInjectorType) {
+	switch (entryLocal->faultInjectorType)
+	{
 		case FaultInjectorTypeNotSpecified:
-			
 			break;
 
 		case FaultInjectorTypeSleep:
@@ -334,13 +330,12 @@ FaultInjector_InjectFaultIfSet(
 			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));	
-			
+							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));			
 			pg_usleep(entryLocal->extraArg * 1000000L);
 			break;
 
 		case FaultInjectorTypeFatal:
-			ereport(FATAL, 
+			ereport(FATAL,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
 							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
@@ -383,20 +378,21 @@ FaultInjector_InjectFaultIfSet(
 				 ii < cnt && FaultInjector_LookupHashEntry(entryLocal->faultName);
 				 ii++)
 			{
-				pg_usleep(1000000L); // sleep for 1 sec (1 sec * 3600 = 1 hour)
+				pg_usleep(1000000L);
 				CHECK_FOR_INTERRUPTS();
 			}
 			break;
 			
 		case FaultInjectorTypeSuspend:
 		{
+			/* Suspend until the fault is resumed or reset */
 			FaultInjectorEntry_s	*entry;
-			
-			ereport(LOG, 
+
+			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));	
-			
+							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
+
 			while ((entry = FaultInjector_LookupHashEntry(entryLocal->faultName)) != NULL &&
 				   entry->faultInjectorType != FaultInjectorTypeResume)
 			{
@@ -405,10 +401,10 @@ FaultInjector_InjectFaultIfSet(
 
 			if (entry != NULL)
 			{
-				ereport(LOG, 
+				ereport(LOG,
 						(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entry->faultInjectorType])));	
+							FaultInjectorTypeEnumToString[entry->faultInjectorType])));
 			}
 			else
 			{
@@ -431,7 +427,7 @@ FaultInjector_InjectFaultIfSet(
 			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));							
+							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
 			break;
 
 		case FaultInjectorTypeResume:
@@ -440,7 +436,7 @@ FaultInjector_InjectFaultIfSet(
 			 * yet.  Ignore.
 			 */
 			break;
-			
+
 		case FaultInjectorTypeSegv:
 		{
 			/*
@@ -459,9 +455,8 @@ FaultInjector_InjectFaultIfSet(
 			*(volatile int *) 0 = 1234;
 			break;
 		}
-		
+
 		case FaultInjectorTypeInterrupt:
-		{
 			/*
 			 * XXX: check if the following comment is valid.
 			 *

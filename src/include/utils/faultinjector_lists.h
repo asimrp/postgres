@@ -43,7 +43,6 @@ FI_TYPE(FaultInjectorTypeReset, "reset")
 FI_TYPE(FaultInjectorTypeStatus, "status")
 FI_TYPE(FaultInjectorTypeSegv, "segv")
 FI_TYPE(FaultInjectorTypeInterrupt, "interrupt")
-FI_TYPE(FaultInjectorTypeFinishPending, "finish_pending")
 FI_TYPE(FaultInjectorTypeWaitUntilTriggered, "wait_until_triggered")
 #endif
 

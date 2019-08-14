@@ -234,9 +234,8 @@ FaultInjector_InjectFaultIfSet(
 	char					tableNameLocal[NAMEDATALEN];
 	int						ii = 0;
 	int cnt = 3600;
-	FaultInjectorType_e retvalue = FaultInjectorTypeNotSpecified;
 
-	if (strlen(faultName) >= sizeof(localEntry.faultName))
+	if (strlen(faultName) >= FAULT_NAME_MAX_LENGTH)
 		elog(ERROR, "fault name too long: '%s'", faultName);
 	if (strcmp(faultName, FaultInjectorNameAll) == 0)
 		elog(ERROR, "invalid fault name '%s'", faultName);
@@ -320,13 +319,9 @@ FaultInjector_InjectFaultIfSet(
 			entryShared->faultInjectorState = FaultInjectorStateCompleted;
 
 		memcpy(entryLocal, entryShared, sizeof(FaultInjectorEntry_s));
-		retvalue = entryLocal->faultInjectorType;
 	} while (0);
 
 	FiLockRelease();
-
-	if (retvalue == FaultInjectorTypeNotSpecified)
-		return FaultInjectorTypeNotSpecified;
 
 	/* Inject fault */
 	switch (entryLocal->faultInjectorType) {
@@ -335,6 +330,7 @@ FaultInjector_InjectFaultIfSet(
 			break;
 
 		case FaultInjectorTypeSleep:
+			/* Sleep for the specified amount of time. */
 			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
@@ -363,22 +359,22 @@ FaultInjector_InjectFaultIfSet(
 				elog(NOTICE,
 					 "setrlimit failed for RLIMIT_CORE soft limit to zero (%m)");
 #endif
-			ereport(PANIC, 
+			ereport(PANIC,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));	
-
+							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
 			break;
 
 		case FaultInjectorTypeError:
-			ereport(ERROR, 
+			ereport(ERROR,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));	
+							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
 			break;
 
 		case FaultInjectorTypeInfiniteLoop:
-			ereport(LOG, 
+			/* Loop until the fault is reset or an interrupt occurs. */
+			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
 							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
@@ -416,9 +412,8 @@ FaultInjector_InjectFaultIfSet(
 			}
 			else
 			{
-				ereport(LOG, 
-						(errmsg("fault 'NULL', fault name:'%s'  ",
-								entryLocal->faultName)));
+				ereport(LOG,
+						(errmsg("fault name:'%s' removed", entryLocal->faultName)));
 
 				/*
 				 * Since the entry is gone already, we should NOT update
@@ -432,13 +427,18 @@ FaultInjector_InjectFaultIfSet(
 		}
 
 		case FaultInjectorTypeSkip:
-			ereport(LOG, 
+			/* Do nothing.  The caller is expected to take some action. */
+			ereport(LOG,
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
 							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));							
 			break;
 
 		case FaultInjectorTypeResume:
+			/*
+			 * This fault is resumed after suspension but has not been reset
+			 * yet.  Ignore.
+			 */
 			break;
 			
 		case FaultInjectorTypeSegv:
@@ -463,6 +463,8 @@ FaultInjector_InjectFaultIfSet(
 		case FaultInjectorTypeInterrupt:
 		{
 			/*
+			 * XXX: check if the following comment is valid.
+			 *
 			 * The place where this type of fault is injected must have
 			 * has HOLD_INTERRUPTS() .. RESUME_INTERRUPTS() around it, otherwise
 			 * the interrupt could be handled inside the fault injector itself
@@ -471,33 +473,16 @@ FaultInjector_InjectFaultIfSet(
 					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
 							entryLocal->faultName,
 							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
-
 			InterruptPending = true;
 			QueryCancelPending = true;
 			break;
-		}
-
-		case FaultInjectorTypeFinishPending:
-		{
-			ereport(LOG,
-					(errmsg("fault triggered, fault name:'%s' fault type:'%s' ",
-							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));
-			QueryCancelPending = true;
-			break;
-		}
 
 		default:
-			
-			ereport(LOG, 
-					(errmsg("unexpected error, fault triggered, fault name:'%s' fault type:'%s' ",
-							entryLocal->faultName,
-							FaultInjectorTypeEnumToString[entryLocal->faultInjectorType])));	
-			
-			Assert(0);
+			ereport(ERROR,
+					(errmsg("invalid fault type %d, fault name:'%s'",
+							entryLocal->faultInjectorType, entryLocal->faultName)));
 			break;
 	}
-		
 	return (entryLocal->faultInjectorType);
 }
 

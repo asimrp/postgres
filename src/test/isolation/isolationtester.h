@@ -29,6 +29,7 @@ struct Session
 struct Step
 {
 	int			session;
+	bool		blocks;
 	char	   *name;
 	char	   *sql;
 	char	   *errormsg;

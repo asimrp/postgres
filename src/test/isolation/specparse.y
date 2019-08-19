@@ -45,7 +45,7 @@ TestSpec		parseresult;			/* result of parsing is left here */
 %type <permutation> permutation
 
 %token <str> sqlblock string_literal
-%token PERMUTATION SESSION SETUP STEP TEARDOWN TEST
+%token BLOCKING PERMUTATION SESSION SETUP STEP TEARDOWN TEST
 
 %%
 
@@ -143,8 +143,17 @@ step:
 			STEP string_literal sqlblock
 			{
 				$$ = pg_malloc(sizeof(Step));
+				$$->blocks = false;
 				$$->name = $2;
 				$$->sql = $3;
+				$$->errormsg = NULL;
+			}
+			| BLOCKING STEP string_literal sqlblock
+			{
+				$$ = pg_malloc(sizeof(Step));
+				$$->blocks = true;
+				$$->name = $3;
+				$$->sql = $4;
 				$$->errormsg = NULL;
 			}
 		;

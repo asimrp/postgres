@@ -726,19 +726,23 @@ try_complete_step(TestSpec *testspec, Step *step, int flags)
 			if (flags & STEP_NONBLOCK)
 			{
 				bool		waiting;
-
-				res = PQexecPrepared(conns[0], PREP_WAITING, 1,
-									 &backend_pid_strs[step->session + 1],
-									 NULL, NULL, 0);
-				if (PQresultStatus(res) != PGRES_TUPLES_OK ||
-					PQntuples(res) != 1)
+				if (step->blocks)
+					waiting = true;
+				else
 				{
-					fprintf(stderr, "lock wait query failed: %s",
-							PQerrorMessage(conns[0]));
-					exit(1);
+					res = PQexecPrepared(conns[0], PREP_WAITING, 1,
+										 &backend_pid_strs[step->session + 1],
+										 NULL, NULL, 0);
+					if (PQresultStatus(res) != PGRES_TUPLES_OK ||
+						PQntuples(res) != 1)
+					{
+						fprintf(stderr, "lock wait query failed: %s",
+								PQerrorMessage(conns[0]));
+						exit(1);
+					}
+					waiting = ((PQgetvalue(res, 0, 0))[0] == 't');
+					PQclear(res);
 				}
-				waiting = ((PQgetvalue(res, 0, 0))[0] == 't');
-				PQclear(res);
 
 				if (waiting)	/* waiting to acquire a lock */
 				{

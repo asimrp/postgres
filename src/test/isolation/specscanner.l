@@ -48,6 +48,7 @@ comment			("#"{non_newline}*)
 	litbufsize = LITBUF_INIT;
 %}
 
+blocking		{ return BLOCKING; }
 permutation		{ return PERMUTATION; }
 session			{ return SESSION; }
 setup			{ return SETUP; }

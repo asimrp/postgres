@@ -28,7 +28,6 @@
 #include "access/xact.h"
 #include "libpq/libpq.h"
 #include "libpq/pqformat.h"
-#include "postmaster/autovacuum.h"
 #include "postmaster/bgwriter.h"
 #include "storage/spin.h"
 #include "storage/shmem.h"
@@ -239,19 +238,6 @@ FaultInjector_InjectFaultIfSet(
 		elog(ERROR, "database name too long:'%s'", databaseName);
 	if (strlen(tableName) >= NAMEDATALEN)
 		elog(ERROR, "table name too long: '%s'", tableName);
-
-	/*
-	 * Auto-vacuum worker and launcher process, may run at unpredictable times
-	 * while running tests. So, skip setting any faults for auto-vacuum
-	 * launcher or worker. If anytime in future need to test these processes
-	 * using fault injector framework, this restriction needs to be lifted and
-	 * some other mechanism needs to be placed to avoid flaky failures.
-	 */
-	if (IsAutoVacuumLauncherProcess() ||
-		(IsAutoVacuumWorkerProcess() &&
-		 !(0 == strcmp("vacuum_update_dat_frozen_xid", faultName) ||
-		   0 == strcmp("auto_vac_worker_before_do_autovacuum", faultName))))
-		return FaultInjectorTypeNotSpecified;
 
 	/*
 	 * Return immediately if no fault has been injected ever.  It is

@@ -252,6 +252,8 @@ FaultInjector_InjectFaultIfSet(
 	snprintf(databaseNameLocal, sizeof(databaseNameLocal), "%s", databaseName);
 	snprintf(tableNameLocal, sizeof(tableNameLocal), "%s", tableName);
 
+	entryLocal->faultInjectorType = FaultInjectorTypeNotSpecified;
+
 	FiLockAcquire();
 
 	entryShared = FaultInjector_LookupHashEntry(faultName);

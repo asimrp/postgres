@@ -185,7 +185,7 @@ FaultInjector_ShmemInit(void)
 }
 
 FaultInjectorType_e
-FaultInjector_InjectFaultIfSet(
+FaultInjector_TriggerFaultIfSet(
 							   const char*				 faultName,
 							   const char*				 databaseName,
 							   const char*				 tableName)

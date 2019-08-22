@@ -74,7 +74,7 @@ extern Size FaultInjector_ShmemSize(void);
 
 extern void FaultInjector_ShmemInit(void);
 
-extern FaultInjectorType_e FaultInjector_InjectFaultIfSet(
+extern FaultInjectorType_e FaultInjector_TriggerFaultIfSet(
 							   const char*				 faultName,
 							   const char*				 databaseName,
 							   const char*				 tableName);
@@ -87,7 +87,7 @@ extern char *InjectFault(
 extern bool am_faultinjector;
 #define IsFaultHandler am_faulthandler
 #define SIMPLE_FAULT_INJECTOR(FaultName) \
-	FaultInjector_InjectFaultIfSet(FaultName, "", "")
+	FaultInjector_TriggerFaultIfSet(FaultName, "", "")
 #else
 #define IsFaultHandler false
 #define SIMPLE_FAULT_INJECTOR(FaultName)

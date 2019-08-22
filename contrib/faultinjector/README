@@ -4,7 +4,7 @@ Fault Injection Framework
 Fault is defined as a point of interest in the source code with an
 associated action to be taken when that point is hit during execution.
 Fault points are defined using SIMPLE_FAULT_INJECTOR() macro or by
-directly invoking the FaultInjector_InjectFaultIfSet() function.  A
+directly invoking the FaultInjector_TriggerFaultIfSet() function.  A
 fault point is identifed by a name.  This module provides an interface
 to inject a pre-defined fault point into a running PostgreSQL database
 by associating an action with the fault point.  Action can be error,
@@ -58,7 +58,7 @@ code, like so:
  	bool		all_visible_cleared = false;
 
 +#ifdef FAULT_INJECTOR
-+	FaultInjector_InjectFaultIfSet(
++	FaultInjector_TriggerFaultIfSet(
 +		"heap_insert",
 +		"" /* database name */,
 +		RelationGetRelationName(relation));

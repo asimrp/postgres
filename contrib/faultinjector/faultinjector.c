@@ -1,23 +1,27 @@
+/*
+ * faultinjector.c
+ *
+ * SQL interface to inject a pre-defined fault in backend code.
+ */
 #include "postgres.h"
 
 #include "funcapi.h"
 #include "miscadmin.h"
 
-#include "access/heapam.h"
-#include "access/genam.h"
-#include "catalog/indexing.h"
 #include "libpq-fe.h"
-#include "postmaster/postmaster.h"
 #include "utils/builtins.h"
 #include "utils/faultinjector.h"
-#include "utils/fmgroids.h"
-#include "utils/snapmgr.h"
 
 PG_MODULE_MAGIC;
 
 extern Datum inject_fault(PG_FUNCTION_ARGS);
 
 PG_FUNCTION_INFO_V1(inject_fault);
+
+/*
+ * SQL UDF to inject a fault by associating an action against it.  See
+ * the accompanying README for more details.
+ */
 Datum
 inject_fault(PG_FUNCTION_ARGS)
 {

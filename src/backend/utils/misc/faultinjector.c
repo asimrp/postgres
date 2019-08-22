@@ -75,21 +75,12 @@ static int FaultInjector_SetFaultInjection(FaultInjectorEntry_s *entry);
 
 static FaultInjectorType_e FaultInjectorTypeStringToEnum(const char *faultType);
 
-static DDLStatement_e FaultInjectorDDLStringToEnum(const char *ddlString);
-
 /* Arrays to map between enum values and strings */
 const char*
 FaultInjectorTypeEnumToString[] = {
 #define FI_TYPE(id, str) str,
 #include "utils/faultinjector_lists.h"
 #undef FI_TYPE
-};
-
-const char*
-FaultInjectorDDLEnumToString[] = {
-#define FI_DDL_STATEMENT(id, str) str,
-#include "utils/faultinjector_lists.h"
-#undef FI_DDL_STATEMENT
 };
 
 const char*
@@ -114,23 +105,6 @@ FaultInjectorTypeStringToEnum(const char* faultTypeString)
 		}
 	}
 	return faultTypeEnum;
-}
-
-static DDLStatement_e
-FaultInjectorDDLStringToEnum(const char* ddlString)
-{
-	DDLStatement_e	ddlEnum = DDLMax;
-	int	ii;
-
-	for (ii=DDLNotSpecified; ii < DDLMax; ii++)
-	{
-		if (strcmp(FaultInjectorDDLEnumToString[ii], ddlString) == 0)
-		{
-			ddlEnum = ii;
-			break;
-		}
-	}
-	return ddlEnum;
 }
 
 static void
@@ -213,7 +187,6 @@ FaultInjector_ShmemInit(void)
 FaultInjectorType_e
 FaultInjector_InjectFaultIfSet(
 							   const char*				 faultName,
-							   DDLStatement_e			 ddlStatement,
 							   const char*				 databaseName,
 							   const char*				 tableName)
 {
@@ -262,10 +235,6 @@ FaultInjector_InjectFaultIfSet(
 	{
 		if (entryShared == NULL)
 			/* fault injection is not set */
-			break;
-
-		if (entryShared->ddlStatement != ddlStatement)
-			/* fault injection is not set for the specified DDL */
 			break;
 
 		if (strcmp(entryShared->databaseName, databaseNameLocal) != 0)
@@ -619,7 +588,6 @@ FaultInjector_NewHashEntry(
 	strlcpy(entryLocal->faultName, entry->faultName, sizeof(entryLocal->faultName));
 
 	entryLocal->extraArg = entry->extraArg;
-	entryLocal->ddlStatement = entry->ddlStatement;
 
 	entryLocal->startOccurrence = entry->startOccurrence;
 	entryLocal->endOccurrence = entry->endOccurrence;
@@ -796,7 +764,6 @@ FaultInjector_SetFaultInjection(
 					sizeof(entry->bufOutput) - length,
 					"fault name:'%s' "
 					"fault type:'%s' "
-					"ddl statement:'%s' "
 					"database name:'%s' "
 					"table name:'%s' "
 					"start occurrence:'%d' "
@@ -806,7 +773,6 @@ FaultInjector_SetFaultInjection(
 					"num times hit:'%d' \n",
 					entryLocal->faultName,
 					FaultInjectorTypeEnumToString[entryLocal->faultInjectorType],
-					FaultInjectorDDLEnumToString[entryLocal->ddlStatement],
 					entryLocal->databaseName,
 					entryLocal->tableName,
 					entryLocal->startOccurrence,
@@ -848,14 +814,14 @@ FaultInjector_SetFaultInjection(
 }
 
 char *
-InjectFault(char *faultName, char *type, char *ddlStatement, char *databaseName,
-			char *tableName, int startOccurrence, int endOccurrence, int extraArg)
+InjectFault(char *faultName, char *type, char *databaseName, char *tableName,
+			int startOccurrence, int endOccurrence, int extraArg)
 {
 	StringInfo buf = makeStringInfo();
 	FaultInjectorEntry_s faultEntry;
 
-	elog(DEBUG1, "injecting fault: name %s, type %s, DDL %s, db %s, table %s, startOccurrence %d, endOccurrence %d, extraArg %d",
-		 faultName, type, ddlStatement, databaseName, tableName,
+	elog(DEBUG1, "injecting fault: name %s, type %s, db %s, table %s, startOccurrence %d, endOccurrence %d, extraArg %d",
+		 faultName, type, databaseName, tableName,
 		 startOccurrence, endOccurrence, extraArg );
 
 	if (strlcpy(faultEntry.faultName, faultName, sizeof(faultEntry.faultName)) >=
@@ -887,12 +853,6 @@ InjectFault(char *faultName, char *type, char *ddlStatement, char *databaseName,
 					(errcode(ERRCODE_PROTOCOL_VIOLATION),
 					 errmsg("invalid sleep time, allowed range [0, 7200 sec]")));
 	}
-
-	faultEntry.ddlStatement = FaultInjectorDDLStringToEnum(ddlStatement);
-	if (faultEntry.ddlStatement == DDLMax)
-		ereport(ERROR,
-				(errcode(ERRCODE_PROTOCOL_VIOLATION),
-				 errmsg("could not recognize DDL statement")));
 
 	if (strlcpy(faultEntry.databaseName, databaseName,
 				sizeof(faultEntry.databaseName)) >=

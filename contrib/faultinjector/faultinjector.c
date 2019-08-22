@@ -23,17 +23,16 @@ inject_fault(PG_FUNCTION_ARGS)
 {
 	char	*faultName = TextDatumGetCString(PG_GETARG_DATUM(0));
 	char	*type = TextDatumGetCString(PG_GETARG_DATUM(1));
-	char	*ddlStatement = TextDatumGetCString(PG_GETARG_DATUM(2));
-	char	*databaseName = TextDatumGetCString(PG_GETARG_DATUM(3));
-	char	*tableName = TextDatumGetCString(PG_GETARG_DATUM(4));
-	int		startOccurrence = PG_GETARG_INT32(5);
-	int		endOccurrence = PG_GETARG_INT32(6);
-	int		extraArg = PG_GETARG_INT32(7);
+	char	*databaseName = TextDatumGetCString(PG_GETARG_DATUM(2));
+	char	*tableName = TextDatumGetCString(PG_GETARG_DATUM(3));
+	int		startOccurrence = PG_GETARG_INT32(4);
+	int		endOccurrence = PG_GETARG_INT32(5);
+	int		extraArg = PG_GETARG_INT32(6);
 	char	*response;
 
 	response = InjectFault(
-		faultName, type, ddlStatement, databaseName,
-		tableName, startOccurrence, endOccurrence, extraArg);
+		faultName, type, databaseName, tableName,
+		startOccurrence, endOccurrence, extraArg);
 	if (!response)
 		elog(ERROR, "failed to inject fault");
 	if (strncmp(response, "Success:",  strlen("Success:")) != 0)

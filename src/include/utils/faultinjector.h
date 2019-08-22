@@ -35,16 +35,6 @@ typedef enum FaultInjectorType_e {
 /*
  *
  */
-typedef enum DDLStatement_e {
-#define FI_DDL_STATEMENT(id, str) id,
-#include "utils/faultinjector_lists.h"
-#undef FI_DDL_STATEMENT
-	DDLMax
-} DDLStatement_e;
-
-/*
- *
- */
 typedef enum FaultInjectorState_e {
 #define FI_STATE(id, str) id,
 #include "utils/faultinjector_lists.h"
@@ -65,8 +55,6 @@ typedef struct FaultInjectorEntry_s {
 	int						extraArg;
 		/* in seconds, in use if fault injection type is sleep */
 		
-	DDLStatement_e			ddlStatement;
-	
 	char					databaseName[NAMEDATALEN];
 	
 	char					tableName[NAMEDATALEN];
@@ -88,19 +76,18 @@ extern void FaultInjector_ShmemInit(void);
 
 extern FaultInjectorType_e FaultInjector_InjectFaultIfSet(
 							   const char*				 faultName,
-							   DDLStatement_e			 ddlStatement,
 							   const char*				 databaseName,
 							   const char*				 tableName);
 
 extern char *InjectFault(
-	char *faultName, char *type, char *ddlStatement, char *databaseName,
-	char *tableName, int startOccurrence, int endOccurrence, int extraArg);
+	char *faultName, char *type, char *databaseName, char *tableName,
+	int startOccurrence, int endOccurrence, int extraArg);
 
 #ifdef FAULT_INJECTOR
 extern bool am_faultinjector;
 #define IsFaultHandler am_faulthandler
 #define SIMPLE_FAULT_INJECTOR(FaultName) \
-	FaultInjector_InjectFaultIfSet(FaultName, DDLNotSpecified, "", "")
+	FaultInjector_InjectFaultIfSet(FaultName, "", "")
 #else
 #define IsFaultHandler false
 #define SIMPLE_FAULT_INJECTOR(FaultName)

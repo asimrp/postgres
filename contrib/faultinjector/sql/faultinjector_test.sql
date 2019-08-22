@@ -4,7 +4,7 @@ CREATE EXTENSION faultinjector;
 select inject_fault('all', 'reset');
 
 -- inject fault of type skip
-select inject_fault('checkpoint', 'skip', '', '', '', 1, 2, 0);
+select inject_fault('checkpoint', 'skip', '', '', 1, 2, 0);
 
 -- wait for fault triggered 0 times, should not block
 select wait_until_triggered_fault('checkpoint', 0);

@@ -981,7 +981,6 @@ exec_fault_injector_command(const char *query_string)
 {
 	char name[NAMEDATALEN];
 	char type[NAMEDATALEN];
-	char ddl[NAMEDATALEN];
 	char db[NAMEDATALEN];
 	char table[NAMEDATALEN];
 	int start;
@@ -990,19 +989,17 @@ exec_fault_injector_command(const char *query_string)
 	char *result;
 	int len;
 
-	if (sscanf(query_string, "faultname=%s type=%s ddl=%s db=%s table=%s "
+	if (sscanf(query_string, "faultname=%s type=%s db=%s table=%s "
 			   "start=%d end=%d extra=%d",
-			   name, type, ddl, db, table, &start, &end, &extra) != 8)
+			   name, type, db, table, &start, &end, &extra) != 8)
 		elog(ERROR, "invalid fault message: %s", query_string);
 	/* The value '#' means not specified. */
-	if (ddl[0] == '#')
-		ddl[0] = '\0';
 	if (db[0] == '#')
 		db[0] = '\0';
 	if (table[0] == '#')
 		table[0] = '\0';
 
-	result = InjectFault(name, type, ddl, db, table, start, end, extra);
+	result = InjectFault(name, type, db, table, start, end, extra);
 	len = strlen(result);
 
 	StringInfoData buf;

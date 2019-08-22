@@ -7,7 +7,7 @@ select inject_fault('all', 'reset');
 (1 row)
 
 -- inject fault of type skip
-select inject_fault('checkpoint', 'skip', '', '', '', 1, 2, 0);
+select inject_fault('checkpoint', 'skip', '', '', 1, 2, 0);
  inject_fault 
 --------------
  Success:
@@ -30,9 +30,9 @@ select wait_until_triggered_fault('checkpoint', 1);
 
 -- check status
 select inject_fault('checkpoint', 'status');
-                                                                                                 inject_fault                                                                                                  
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- Success: fault name:'checkpoint' fault type:'skip' ddl statement:'' database name:'' table name:'' start occurrence:'1' end occurrence:'2' extra arg:'0' fault injection state:'triggered' num times hit:'1' +
+                                                                                         inject_fault                                                                                         
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Success: fault name:'checkpoint' fault type:'skip' database name:'' table name:'' start occurrence:'1' end occurrence:'2' extra arg:'0' fault injection state:'triggered' num times hit:'1' +
  
 (1 row)
 

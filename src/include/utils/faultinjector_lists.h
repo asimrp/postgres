@@ -45,25 +45,6 @@ FI_TYPE(FaultInjectorTypeWaitUntilTriggered, "wait_until_triggered")
 #endif
 
 /*
- *
- */
-#ifdef FI_DDL_STATEMENT
-FI_DDL_STATEMENT(DDLNotSpecified = 0, "")
-FI_DDL_STATEMENT(CreateDatabase, "create_database")
-FI_DDL_STATEMENT(DropDatabase, "drop_database")
-FI_DDL_STATEMENT(CreateTable, "create_table")
-FI_DDL_STATEMENT(DropTable, "drop_table")
-FI_DDL_STATEMENT(CreateIndex, "create_index")
-FI_DDL_STATEMENT(AlterIndex, "alter_index")
-FI_DDL_STATEMENT(ReIndex, "reindex")
-FI_DDL_STATEMENT(DropIndex, "drop_index")
-FI_DDL_STATEMENT(CreateTablespaces, "create_tablespaces")
-FI_DDL_STATEMENT(DropTablespaces, "drop_tablespaces")
-FI_DDL_STATEMENT(Truncate, "truncate")
-FI_DDL_STATEMENT(Vacuum, "vacuum")
-#endif
-
-/*
  * States of a fault.
  */
 #ifdef FI_STATE

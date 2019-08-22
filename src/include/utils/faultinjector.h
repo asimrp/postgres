@@ -1,9 +1,11 @@
-/*
- *  faultinjector.h
- *  
+/*-------------------------------------------------------------------------
  *
- *  Copyright 2009-2010, Greenplum Inc. All rights reserved.
+ * faultinjector.h
+ *	  Definitions for fault based testing framework.
  *
+ * src/include/utils/faultinjector.h
+ *
+ *-------------------------------------------------------------------------
  */
 
 #ifndef FAULTINJECTOR_H

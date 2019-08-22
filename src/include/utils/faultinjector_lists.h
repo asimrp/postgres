@@ -18,8 +18,6 @@
  * below.
  *
  *
- * Copyright 2009-2010, Greenplum Inc. All rights reserved.
- * Copyright (c) 2017-Present Pivotal Software, Inc.
  */
 
 /* there is deliberately not an #ifndef FAULTINJECTOR_LISTS_H here */
@@ -66,16 +64,27 @@ FI_DDL_STATEMENT(Vacuum, "vacuum")
 #endif
 
 /*
- *
+ * States of a fault.
  */
 #ifdef FI_STATE
 FI_STATE(FaultInjectorStateNotInitialized = 0, "not initialized")
-/* Request is waiting to be injected */
+
+/* The fault has been injected (enabled using the SQL interface). */
 FI_STATE(FaultInjectorStateWaiting, "set")
-/* Fault is injected */
+
+/*
+ * A backend process reached the fault point that was set and the
+ * corresponding action has been taken.
+ */
 FI_STATE(FaultInjectorStateTriggered, "triggered")
-/* Fault was injected and completed successfully */
+
+/*
+ * The fault has been triggered as many times as was configured by the
+ * SQL interface.  The action associated with it will no longer be taken
+ * if it is reached during execution.
+ */
 FI_STATE(FaultInjectorStateCompleted, "completed")
+
 /* Fault was NOT injected */
 FI_STATE(FaultInjectorStateFailed, "failed")
 #endif

@@ -14,7 +14,7 @@ step s1_upsert: <... completed>
 step s1_fault_status: SELECT * FROM inject_fault('heap_abort_speculative', 'status');
 inject_fault   
 
-Success: fault name:'heap_abort_speculative' fault type:'skip' ddl statement:'' database name:'' table name:'' start occurrence:'1' end occurrence:'1' extra arg:'0' fault injection state:'completed' num times hit:'1' 
+Success: fault name:'heap_abort_speculative' fault type:'skip' database name:'' table name:'' start occurrence:'1' end occurrence:'1' extra arg:'0' fault injection state:'completed' num times hit:'1' 
 
 step s1_select: SELECT * FROM upserttest;
 key            data           

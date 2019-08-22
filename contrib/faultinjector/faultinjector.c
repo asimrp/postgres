@@ -25,21 +25,21 @@ PG_FUNCTION_INFO_V1(inject_fault);
 Datum
 inject_fault(PG_FUNCTION_ARGS)
 {
-	char	*faultName = TextDatumGetCString(PG_GETARG_DATUM(0));
-	char	*type = TextDatumGetCString(PG_GETARG_DATUM(1));
-	char	*databaseName = TextDatumGetCString(PG_GETARG_DATUM(2));
-	char	*tableName = TextDatumGetCString(PG_GETARG_DATUM(3));
-	int		startOccurrence = PG_GETARG_INT32(4);
-	int		endOccurrence = PG_GETARG_INT32(5);
-	int		extraArg = PG_GETARG_INT32(6);
-	char	*response;
+	char	   *faultName = TextDatumGetCString(PG_GETARG_DATUM(0));
+	char	   *type = TextDatumGetCString(PG_GETARG_DATUM(1));
+	char	   *databaseName = TextDatumGetCString(PG_GETARG_DATUM(2));
+	char	   *tableName = TextDatumGetCString(PG_GETARG_DATUM(3));
+	int			startOccurrence = PG_GETARG_INT32(4);
+	int			endOccurrence = PG_GETARG_INT32(5);
+	int			extraArg = PG_GETARG_INT32(6);
+	char	   *response;
 
 	response = InjectFault(
-		faultName, type, databaseName, tableName,
-		startOccurrence, endOccurrence, extraArg);
+						   faultName, type, databaseName, tableName,
+						   startOccurrence, endOccurrence, extraArg);
 	if (!response)
 		elog(ERROR, "failed to inject fault");
-	if (strncmp(response, "Success:",  strlen("Success:")) != 0)
+	if (strncmp(response, "Success:", strlen("Success:")) != 0)
 		elog(ERROR, "%s", response);
 	PG_RETURN_TEXT_P(cstring_to_text(response));
 }

@@ -26,7 +26,8 @@ OBJS = \
 	sampling.o \
 	superuser.o \
 	timeout.o \
-	tzparser.o
+	tzparser.o \
+	faultinjector.o
 
 # This location might depend on the installation directories. Therefore
 # we can't substitute it into pg_config.h.

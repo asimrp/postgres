@@ -1988,6 +1988,17 @@ static struct config_bool ConfigureNamesBool[] =
 static struct config_int ConfigureNamesInt[] =
 {
 	{
+		{"debug_replay_delay", PGC_SUSET, WAL_ARCHIVING,
+			gettext_noop("Slow down replay process by sleeping for N seconds"
+						 "before starting to replay a WAL record."),
+			NULL,
+			GUC_UNIT_S
+		},
+		&debug_replay_delay,
+		0, 0, INT_MAX / 2,
+		NULL, NULL, NULL
+	},
+	{
 		{"archive_timeout", PGC_SIGHUP, WAL_ARCHIVING,
 			gettext_noop("Forces a switch to the next WAL file if a "
 						 "new file has not been started within N seconds."),

@@ -110,6 +110,7 @@ extern int	max_wal_size_mb;
 extern int	wal_keep_segments;
 extern int	XLOGbuffers;
 extern int	XLogArchiveTimeout;
+extern int  debug_replay_delay;
 extern int	wal_retrieve_retry_interval;
 extern char *XLogArchiveCommand;
 extern bool EnableHotStandby;

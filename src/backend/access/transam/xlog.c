@@ -87,6 +87,7 @@ int			max_wal_size_mb = 1024; /* 1 GB */
 int			min_wal_size_mb = 80;	/* 80 MB */
 int			wal_keep_segments = 0;
 int			XLOGbuffers = -1;
+int			debug_replay_delay = 0;
 int			XLogArchiveTimeout = 0;
 int			XLogArchiveMode = ARCHIVE_MODE_OFF;
 char	   *XLogArchiveCommand = NULL;
@@ -7198,6 +7199,8 @@ StartupXLOG(void)
 
 				/* Now apply the WAL record itself */
 				RmgrTable[record->xl_rmid].rm_redo(xlogreader);
+				if (debug_replay_delay > 0)
+					pg_usleep(debug_replay_delay * 1000 * 1000);
 
 				/*
 				 * After redo, check whether the backup pages associated with

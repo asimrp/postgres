@@ -241,21 +241,33 @@ WalReceiverMain(void)
 	 * waiting for us to start up, until it times out.
 	 */
 	SpinLockAcquire(&walrcv->mutex);
+	/*
+	 * TODO: postmaster may start walreceiver from ServerLoop.  Startup
+	 * process requests postmaster to start walreceiver on a couple of
+	 * occasions.  The requests from startup process are handled inside
+	 * SIGUSR1 handler.  It is possible that more than one walreceiver
+	 * processes attempt to start nearly simultaneously.  If this is indeed a
+	 * possibility, one solution seems to not start walreceiver from the
+	 * signal handler but only set a flag to do so.
+	 */
 	Assert(walrcv->pid == 0);
 	switch (walrcv->walRcvState)
 	{
 		case WALRCV_STOPPING:
 			/* If we've already been requested to stop, don't start up. */
 			walrcv->walRcvState = WALRCV_STOPPED;
-			/* fall through */
-
-		case WALRCV_STOPPED:
 			SpinLockRelease(&walrcv->mutex);
 			proc_exit(1);
 			break;
 
+		case WALRCV_STOPPED:
+			/*
+			 * Postmaster, upon noticing that WAL receiver is not running,
+			 * starts us from ServerLoop.
+			 */
+			/* fall through */
 		case WALRCV_STARTING:
-			/* The usual case */
+			/* The usual case - startup process requests WAL streaming. */
 			break;
 
 		case WALRCV_WAITING:

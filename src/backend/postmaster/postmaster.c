@@ -360,8 +360,8 @@ static volatile sig_atomic_t start_autovac_launcher = false;
 /* the launcher needs to be signalled to communicate some condition */
 static volatile bool avlauncher_needs_signal = false;
 
-/* received START_WALRECEIVER signal */
-static volatile sig_atomic_t WalReceiverRequested = false;
+/* attempt to start WAL receiver, if not undergoing promotion */
+static volatile sig_atomic_t ReceivedPromoteRequest = false;
 
 /* set when there's a worker that needs to be started up */
 static volatile bool StartWorkerNeeded = true;
@@ -1795,8 +1795,11 @@ ServerLoop(void)
 				kill(AutoVacPID, SIGUSR2);
 		}
 
-		/* If we need to start a WAL receiver, try to do that now */
-		if (WalReceiverRequested)
+		/*
+		 * Start WAL receiver if it is not already running and standby mode
+		 * (or archive recovery) is enabled.
+		 */
+		if (!ReceivedPromoteRequest)
 			MaybeStartWalReceiver();
 
 		/* Get other worker processes running, if needed */
@@ -5282,8 +5285,6 @@ sigusr1_handler(SIGNAL_ARGS)
 	if (CheckPostmasterSignal(PMSIGNAL_START_WALRECEIVER))
 	{
 		/* Startup Process wants us to start the walreceiver process. */
-		/* Start immediately if possible, else remember request for later. */
-		WalReceiverRequested = true;
 		MaybeStartWalReceiver();
 	}
 
@@ -5309,6 +5310,11 @@ sigusr1_handler(SIGNAL_ARGS)
 	{
 		/* Tell startup process to finish recovery */
 		signal_child(StartupPID, SIGUSR2);
+		/*
+		 * Do not attempt to restart wal receiver from now on.  Note that this
+		 * flag remains unchanged once set.
+		 */
+		ReceivedPromoteRequest = true;
 	}
 
 #ifdef WIN32
@@ -5604,26 +5610,29 @@ StartAutovacuumWorker(void)
  * MaybeStartWalReceiver
  *		Start the WAL receiver process, if not running and our state allows.
  *
- * Note: if WalReceiverPID is already nonzero, it might seem that we should
- * clear WalReceiverRequested.  However, there's a race condition if the
- * walreceiver terminates and the startup process immediately requests a new
- * one: it's quite possible to get the signal for the request before reaping
- * the dead walreceiver process.  Better to risk launching an extra
- * walreceiver than to miss launching one we need.  (The walreceiver code
- * has logic to recognize that it should go away if not needed.)
+ * Note: there is a race condition if the walreceiver terminates and the
+ * startup process immediately requests a new one: it's quite possible to get
+ * the signal for the request before reaping the dead walreceiver process.  It
+ * is alright to risk launching an extra walreceiver because the walreceiver
+ * code has logic to recognize that it should go away if not needed.
  */
 static void
 MaybeStartWalReceiver(void)
 {
 	if (WalReceiverPID == 0 &&
-		(pmState == PM_STARTUP || pmState == PM_RECOVERY ||
+		/*
+		 * Cannot include PM_STARTUP here because it leads to starting WAL
+		 * receiver even after a standby is promoted.  The objective is to
+		 * start WAL receiver only when standby mode is enabled.  However,
+		 * pmState is set to PM_RECOVERY when standby mode as well as archive
+		 * recovery is enabled.  That means, postmaster cannot distinguish
+		 * between the two.  TODO: if this is a problem, adderss it somehow!
+		 */
+		(pmState == PM_RECOVERY ||
 		 pmState == PM_HOT_STANDBY || pmState == PM_WAIT_READONLY) &&
 		Shutdown == NoShutdown)
 	{
 		WalReceiverPID = StartWalReceiver();
-		if (WalReceiverPID != 0)
-			WalReceiverRequested = false;
-		/* else leave the flag set, so we'll try again later */
 	}
 }
 

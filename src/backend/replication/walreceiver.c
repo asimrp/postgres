@@ -50,6 +50,7 @@
 #include "access/transam.h"
 #include "access/xlog_internal.h"
 #include "catalog/pg_authid.h"
+#include "catalog/pg_control.h"
 #include "catalog/pg_type.h"
 #include "common/ip.h"
 #include "funcapi.h"
@@ -81,6 +82,8 @@ bool		hot_standby_feedback;
 /* libpqwalreceiver connection */
 static WalReceiverConn *wrconn = NULL;
 WalReceiverFunctionsType *WalReceiverFunctions = NULL;
+
+static ControlFileData *ControlFile = NULL;
 
 #define NAPTIME_PER_CYCLE 100	/* max sleep time between cycles (100ms) */
 
@@ -162,6 +165,45 @@ ProcessWalRcvInterrupts(void)
 	}
 }
 
+
+/*
+ * Persist startpoint to pg_control file.  This is used to start replication
+ * without waiting for startup process to let us know where to start streaming
+ * from.
+ */
+static void
+SaveStartPoint(XLogRecPtr startpoint, TimeLineID startpointTLI)
+{
+	XLogSegNo oldseg, startseg;
+	TimeLineID oldTLI;
+
+	XLByteToSeg(startpoint, startseg, wal_segment_size);
+
+	LWLockAcquire(ControlFileLock, LW_EXCLUSIVE);
+
+#ifdef USE_ASSERT_CHECKING
+	/*
+	 * On a given timeline, the WAL segment to start streaming from should
+	 * never move backwards.
+	 */
+	if (ControlFile->lastFlushedSegTLI == startpointTLI)
+		Assert(ControlFile->lastFlushedSeg <= startseg);
+#endif
+
+	oldseg = ControlFile->lastFlushedSeg;
+	oldTLI = ControlFile->lastFlushedSegTLI;
+	if (oldseg < startseg || oldTLI != startpointTLI)
+	{
+		ControlFile->lastFlushedSeg = startseg;
+		ControlFile->lastFlushedSegTLI = startpointTLI;
+		UpdateControlFile();
+		elog(DEBUG3,
+			 "lastFlushedSeg (seg, TLI) old: (%lu, %u), new: (%lu, %u)",
+			 oldseg, oldTLI, startseg, startpointTLI);
+	}
+
+	LWLockRelease(ControlFileLock);
+}
 
 /* Main entry point for walreceiver process */
 void
@@ -304,6 +346,30 @@ WalReceiverMain(void)
 	if (sender_host)
 		pfree(sender_host);
 
+	bool found;
+	ControlFile = ShmemInitStruct("Control File", sizeof(ControlFileData), &found);
+	Assert(found);
+
+	XLogSegNo startseg;
+	XLByteToSeg(startpoint, startseg, wal_segment_size);
+
+	LWLockAcquire(ControlFileLock, LW_SHARED);
+	if (startpointTLI == ControlFile->lastFlushedSegTLI &&
+		startseg < ControlFile->lastFlushedSeg)
+	{
+		/*
+		 * Advance startpoint to the flush point in control file.  The
+		 * startpoint may be behind like this when WAL receiver is started by
+		 * postmaster upon noticing that an existing WAL receiver child
+		 * process exited.  Postmaster does not update WalRcv->startpoint,
+		 * similar to how it's done in RequestXLogStreaming, because it should
+		 * refrain from touching shared memory.
+		 */
+		XLogSegNoOffsetToRecPtr(
+			ControlFile->lastFlushedSeg, 0, wal_segment_size, startpoint);
+	}
+	LWLockRelease(ControlFileLock);
+
 	first_stream = true;
 	for (;;)
 	{
@@ -407,10 +473,13 @@ WalReceiverMain(void)
 		if (walrcv_startstreaming(wrconn, &options))
 		{
 			if (first_stream)
+			{
 				ereport(LOG,
 						(errmsg("started streaming WAL from primary at %X/%X on timeline %u",
 								(uint32) (startpoint >> 32), (uint32) startpoint,
 								startpointTLI)));
+				SaveStartPoint(startpoint, startpointTLI);
+			}
 			else
 				ereport(LOG,
 						(errmsg("restarted WAL streaming at %X/%X on timeline %u",
@@ -1055,6 +1124,27 @@ XLogWalRcvFlush(bool dying)
 		/* Also let the master know that we made some progress */
 		if (!dying)
 		{
+			/*
+			 * When a WAL segment file is completely filled,
+			 * LogstreamResult.Flush points to the beginning of the new WAL
+			 * segment file that will be created shortly.  Before sending a
+			 * reply with a LSN from the new WAL segment for the first time,
+			 * remember the LSN in pg_control.  The LSN is used as the
+			 * startpoint to start streaming again if the WAL receiver process
+			 * exits and starts again.
+			 *
+			 * It is important to update the LSN's segment number in
+			 * pg_control before including it in a replay back to the WAL
+			 * sender.  Once WAL sender receives the flush LSN from standby
+			 * reply, any older WAL segments that do not contain the flush LSN
+			 * may be cleaned up.  If the WAL receiver dies after sending a
+			 * reply but before updating pg_control, it is possible that the
+			 * starting segment saved in pg_control is no longer available on
+			 * master when it attempts to resume streaming.
+			 */
+			if (XLogSegmentOffset(LogstreamResult.Flush, wal_segment_size) == 0)
+				SaveStartPoint(LogstreamResult.Flush, ThisTimeLineID);
+
 			XLogWalRcvSendReply(false, false);
 			XLogWalRcvSendHSFeedback(false);
 		}

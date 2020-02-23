@@ -446,6 +446,7 @@ WalReceiverMain(void)
 
 				/* Process any requests or signals received recently */
 				ProcessWalRcvInterrupts();
+				SIMPLE_FAULT_INJECTOR("wal_receiver_loop");
 
 				if (got_SIGHUP)
 				{

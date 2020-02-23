@@ -7117,6 +7117,8 @@ StartupXLOG(void)
 					break;
 				}
 
+				SIMPLE_FAULT_INJECTOR("redo_main_loop");
+
 				/*
 				 * If we've been asked to lag the master, wait on latch until
 				 * enough time has passed.

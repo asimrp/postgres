@@ -73,6 +73,7 @@
 #include "storage/procsignal.h"
 #include "utils/acl.h"
 #include "utils/builtins.h"
+#include "utils/faultinjector.h"
 #include "utils/guc.h"
 #include "utils/pg_lsn.h"
 #include "utils/ps_status.h"
@@ -1000,6 +1001,18 @@ XLogWalRcvWrite(char *buf, Size nbytes, XLogRecPtr recptr)
 static void
 XLogWalRcvFlush(bool dying)
 {
+#ifdef FAULT_INJECTOR
+	if (SIMPLE_FAULT_INJECTOR("standby_flush") == FaultInjectorTypeSkip)
+	{
+		/* Skip flush but respond to master. */
+		if (!dying)
+		{
+			XLogWalRcvSendReply(false, false);
+			XLogWalRcvSendHSFeedback(false);
+		}
+		return;	
+	}
+#endif
 	if (LogstreamResult.Flush < LogstreamResult.Write)
 	{
 		WalRcvData *walrcv = WalRcv;

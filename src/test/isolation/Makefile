@@ -52,8 +52,19 @@ clean distclean:
 maintainer-clean: distclean
 	rm -f specparse.c specscanner.c
 
+ifneq (,$(findstring FAULT_INJECTOR, $(CPPFLAGS)))
+EXTRA_INSTALL = contrib/faultinjector
+installcheck: all installcheck-faultinjector
+else
 installcheck: all
+endif
 	$(pg_isolation_regress_installcheck) --schedule=$(srcdir)/isolation_schedule
+
+install-faultinjector:
+	$(MAKE) -C $(top_builddir)/contrib/faultinjector install
+
+installcheck-faultinjector: install-faultinjector
+	$(pg_isolation_regress_installcheck) --schedule=$(srcdir)/faultinjector_schedule
 
 check: all
 	$(pg_isolation_regress_check) --schedule=$(srcdir)/isolation_schedule
